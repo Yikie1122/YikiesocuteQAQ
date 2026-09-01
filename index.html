@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>約會邀請函</title>
+<style>
+body {
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+height: 100vh;
+margin: 0;
+background-color: #ffe6e6;
+font-family: Arial, sans-serif;
+text-align: center;
+}
+.container {
+background-color: white;
+padding: 30px;
+border-radius: 20px;
+box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+max-width: 400px;
+width: 85%;
+}
+h1 {
+color: #d63384;
+font-size: 24px;
+margin-bottom: 30px;
+}
+.buttons {
+position: relative;
+width: 100%;
+height: 80px;
+}
+button {
+padding: 12px 30px;
+font-size: 18px;
+font-weight: bold;
+border: none;
+border-radius: 20px;
+cursor: pointer;
+box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+#yesBtn {
+background-color: #ff4d4d;
+color: white;
+position: absolute;
+left: 20px;
+}
+#noBtn {
+background-color: #cccccc;
+color: #333333;
+position: absolute;
+right: 20px;
+transition: 0.1s;
+}
+.step {
+display: none;
+margin-top: 20px;
+}
+.label-title {
+color: #666;
+font-size: 16px;
+margin-top: 15px;
+margin-bottom: 5px;
+text-align: left;
+font-weight: bold;
+}
+input[type="date"], input[type="time"], select {
+width: 100%;
+padding: 12px;
+font-size: 16px;
+border: 2px solid #ff4d4d;
+border-radius: 10px;
+margin-bottom: 15px;
+box-sizing: border-box;
+outline: none;
+}
+#submitBtn {
+background-color: #28a745;
+color: white;
+width: 100%;
+margin-top: 10px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h1 id="title">主人,可以賞個臉跟我一起去吃飯嗎？</h1>
+
+<!-- 階段一：答應與否 -->
+<div id="step1" class="buttons">
+<button id="yesBtn" onclick="goToStep2()">好</button>
+<button id="noBtn" onmouseover="moveButton()" onclick="moveButton()">滾</button>
+</div>
+
+<!-- 階段二：填寫行程 -->
+<div id="step2" class="step">
+<!-- 不准反悔！ -->
+<!-- https://docs.google.com/forms/d/e/1FAIpQLSepOZcfEkndyjPgPJTyOOF46EmRQOjjC5acK1vSO8n3JjJeAQ/formResponse?usp=pp_url&entry.2048051334=2026%5C09%5C03&entry.1639504040=15:30&entry.2045651188=%E5%A3%BD%E5%96%9C%E7%87%92 -->
+<form id="dateForm"
+      action="https://docs.google.com/forms/d/e/1FAIpQLSepOZcfEkndyjPgPJTyOOF46EmRQOjjC5acK1vSO8n3JjJeAQ/formResponse"
+      method="POST"
+      target="hidden_iframe">
+<!-- 問題一：日期 -->
+<div class="label-title">📅 第一個問題：選擇日期</div>
+<input type="date" id="dateInput" required>
+
+<!-- 問題二：當天的時間 -->
+<div class="label-title">⏰ 第二個問題：選擇當天的時間</div>
+<input type="time" id="timeInput" required>
+
+<!-- 問題三：吃什麼 -->
+<div class="label-title">🍣 第三個問題：想吃什麼呢？</div>
+<select id="foodInput" required>
+<option value="" disabled selected>-- 請選擇料理 --</option>
+<option value="壽喜燒">壽喜燒 🍲</option>
+<option value="壽司">壽司 🍣</option>
+<option value="咖哩">咖哩 🍛</option>
+<option value="燒肉">燒肉 🥩</option>
+<option value="牛肉麵">牛肉麵 🍜</option>
+<option value="有其他想吃的">有其他想吃的</option>
+
+</select>
+
+<!-- 隱藏欄位：填入對應問題的 Google 表單 entry ID -->
+<input type="hidden" id="entryDate" name="entry.2048051334">
+<input type="hidden" id="entryTime" name="entry.1639504040">
+<input type="hidden" id="entryFood" name="entry.2045651188">
+
+<button type="submit" id="submitBtn" onclick="submitData()">完成並送出 ❤️</button>
+</form><iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+</div>
+</div>
+
+<script>
+// 設定不能選擇過去的日期
+document.getElementById('dateInput').min = new Date().toISOString().split("T")[0];
+
+function moveButton() {
+const x = Math.floor(Math.random() * 160) - 80;
+const y = Math.floor(Math.random() * 80) - 40;
+const noBtn = document.getElementById('noBtn');
+noBtn.style.transform = `translate(${x}px, ${y}px)`;
+}
+
+function goToStep2() {
+document.getElementById('title').innerText = '❤️ 謝謝 ❤️';
+document.getElementById('step1').style.display = 'none';
+document.getElementById('step2').style.display = 'block';
+document.body.style.backgroundColor = '#ffcccc';
+}
+
+function submitData() {
+const chosenDate = document.getElementById('dateInput').value;
+const chosenTime = document.getElementById('timeInput').value;
+const chosenFood = document.getElementById('foodInput').value;
+
+if(!chosenDate || !chosenTime || !chosenFood) return;
+
+// 將畫面的值同步到隱藏的 Google 表單欄位中
+document.getElementById('entryDate').value = chosenDate;
+document.getElementById('entryTime').value = chosenTime;
+document.getElementById('entryFood').value = chosenFood;
+
+alert('牛來！不准反悔！');
+}
+</script>
+
+</body>
+</html>\
