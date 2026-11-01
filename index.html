@@ -2,173 +2,146 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>約會邀請函</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>媽媽生日快樂！</title>
 <style>
+* { box-sizing: border-box; }
 body {
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-height: 100vh;
-margin: 0;
-background-color: #ffe6e6;
-font-family: Arial, sans-serif;
-text-align: center;
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Microsoft JhengHei", sans-serif;
+  background: linear-gradient(135deg,#ffe4ec,#fff2dc);
+  color: #884c60;
+  text-align: center;
+  overflow-x: hidden;
 }
-.container {
-background-color: white;
-padding: 30px;
-border-radius: 20px;
-box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-max-width: 400px;
-width: 85%;
-}
-h1 {
-color: #d63384;
-font-size: 24px;
-margin-bottom: 30px;
-}
-.buttons {
-position: relative;
-width: 100%;
-height: 80px;
+main { padding: 45px 15px; }
+h1 { font-size: 38px; }
+p { font-size: 18px; }
+.panel {
+  max-width: 600px;
+  margin: 25px auto;
+  padding: 30px 20px;
+  background: #ffffffd9;
+  border-radius: 25px;
+  box-shadow: 0 8px 25px #d69aaf55;
 }
 button {
-padding: 12px 30px;
-font-size: 18px;
-font-weight: bold;
-border: none;
-border-radius: 20px;
-cursor: pointer;
-box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  border: none;
+  border-radius: 18px;
+  padding: 15px 25px;
+  margin: 10px;
+  background: #ed91ac;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
 }
-#yesBtn {
-background-color: #ff4d4d;
-color: white;
-position: absolute;
-left: 20px;
+button:hover { transform: scale(1.07); }
+.gifts {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
 }
-#noBtn {
-background-color: #cccccc;
-color: #333333;
-position: absolute;
-right: 20px;
-transition: 0.1s;
+.gift {
+  font-size: 65px;
+  cursor: pointer;
+  background: #fff0f4;
+  padding: 15px;
+  border-radius: 20px;
 }
-.step {
-display: none;
-margin-top: 20px;
+#message {
+  font-size: 22px;
+  min-height: 65px;
+  color: #d46d91;
 }
-.label-title {
-color: #666;
-font-size: 16px;
-margin-top: 15px;
-margin-bottom: 5px;
-text-align: left;
-font-weight: bold;
-}
-input[type="date"], input[type="time"], select {
-width: 100%;
-padding: 12px;
-font-size: 16px;
-border: 2px solid #ff4d4d;
-border-radius: 10px;
-margin-bottom: 15px;
-box-sizing: border-box;
-outline: none;
-}
-#submitBtn {
-background-color: #28a745;
-color: white;
-width: 100%;
-margin-top: 10px;
+#final { display: none; }
+#cake { font-size: 100px; }
+#confetti {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  font-size: 25px;
 }
 </style>
 </head>
 <body>
+<main>
+  <h1>🎀 母親生日快樂！ 🎀</h1>
+  <p>11月2日，是特別日子。</p>
 
-<div class="container">
-<h1 id="title">主人,可以賞個臉跟我一起去吃飯嗎？</h1>
+  <section class="panel" id="start">
+    <div style="font-size:90px">🎂</div>
+    <h2>生日驚喜</h2>
+    <p>有一份神秘禮物！</p>
+    <p>準備好接受生日驚喜了嗎？</p>
+    <button onclick="begin()">開始遊戲 ♡</button>
+  </section>
 
-<!-- 階段一：答應與否 -->
-<div id="step1" class="buttons">
-<button id="yesBtn" onclick="goToStep2()">好</button>
-<button id="noBtn" onmouseover="moveButton()" onclick="moveButton()">滾</button>
-</div>
+  <section class="panel" id="game" style="display:none">
+    <h2>🎁 第一關：拆開生日禮物</h2>
+    <p>請點開下面三個禮物盒！</p>
+    <div class="gifts">
+      <div class="gift" onclick="openGift(0)">🎁</div>
+      <div class="gift" onclick="openGift(1)">🎁</div>
+      <div class="gift" onclick="openGift(2)">🎁</div>
+    </div>
+    <p id="message">還有 3 個禮物等待拆開！</p>
+  </section>
 
-<!-- 階段二：填寫行程 -->
-<div id="step2" class="step">
-<!-- 不准反悔！ -->
-<!-- https://docs.google.com/forms/d/e/1FAIpQLSepOZcfEkndyjPgPJTyOOF46EmRQOjjC5acK1vSO8n3JjJeAQ/formResponse?usp=pp_url&entry.2048051334=2026%5C09%5C03&entry.1639504040=15:30&entry.2045651188=%E5%A3%BD%E5%96%9C%E7%87%92 -->
-<form id="dateForm"
-      action="https://docs.google.com/forms/d/e/1FAIpQLSepOZcfEkndyjPgPJTyOOF46EmRQOjjC5acK1vSO8n3JjJeAQ/formResponse"
-      method="POST"
-      target="hidden_iframe">
-<!-- 問題一：日期 -->
-<div class="label-title">📅 第一個問題：選擇日期</div>
-<input type="date" id="dateInput" required>
-
-<!-- 問題二：當天的時間 -->
-<div class="label-title">⏰ 第二個問題：選擇當天的時間</div>
-<input type="time" id="timeInput" required>
-
-<!-- 問題三：吃什麼 -->
-<div class="label-title">🍣 第三個問題：想吃什麼呢？</div>
-<select id="foodInput" required>
-<option value="" disabled selected>-- 請選擇料理 --</option>
-<option value="壽喜燒">壽喜燒 🍲</option>
-<option value="壽司">壽司 🍣</option>
-<option value="咖哩">咖哩 🍛</option>
-<option value="燒肉">燒肉 🥩</option>
-<option value="牛肉麵">牛肉麵 🍜</option>
-<option value="有其他想吃的">有其他想吃的</option>
-
-</select>
-
-<!-- 隱藏欄位：填入對應問題的 Google 表單 entry ID -->
-<input type="hidden" id="entryDate" name="entry.2048051334">
-<input type="hidden" id="entryTime" name="entry.1639504040">
-<input type="hidden" id="entryFood" name="entry.2045651188">
-
-<button type="submit" id="submitBtn" onclick="submitData()">完成並送出 ❤️</button>
-</form><iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
-</div>
-</div>
+  <section class="panel" id="final">
+    <h2>🎂 最後一關：生日許願！</h2>
+    <div id="cake">🕯️🎂🕯️</div>
+    <p>閉上眼睛，許下一個願望吧！</p>
+    <button onclick="wish()">吹熄蠟燭！</button>
+    <div id="ending" style="display:none">
+      <h1>🎉 生日快樂！！！</h1>
+      <h2>親愛的母親 ❤️</h2>
+      <p>
+        感謝一直以來的照顧與付出。<br>
+        祝妳每天都能健康、平安、快樂。<br>
+        <strong>生日快樂！</strong>
+      </p>
+      <div style="font-size:55px">💗🌷🎂🌷💗</div>
+    </div>
+  </section>
+</main>
+<div id="confetti"></div>
 
 <script>
-// 設定不能選擇過去的日期
-document.getElementById('dateInput').min = new Date().toISOString().split("T")[0];
+let opened = [false,false,false];
+let words = [
+  "💗 第一份禮物：祝妳每天都開開心心！",
+  "🌷 第二份禮物：祝妳永遠健康平安！",
+  "✨ 第三份禮物：祝妳所有願望都能實現！"
+];
 
-function moveButton() {
-const x = Math.floor(Math.random() * 160) - 80;
-const y = Math.floor(Math.random() * 80) - 40;
-const noBtn = document.getElementById('noBtn');
-noBtn.style.transform = `translate(${x}px, ${y}px)`;
+function begin() {
+  document.getElementById("start").style.display="none";
+  document.getElementById("game").style.display="block";
 }
 
-function goToStep2() {
-document.getElementById('title').innerText = '❤️ 謝謝 ❤️';
-document.getElementById('step1').style.display = 'none';
-document.getElementById('step2').style.display = 'block';
-document.body.style.backgroundColor = '#ffcccc';
+function openGift(i) {
+  if(opened[i]) return;
+  opened[i]=true;
+  document.querySelectorAll(".gift")[i].innerHTML="💝";
+  document.getElementById("message").innerText=words[i];
+  if(opened.every(Boolean)) {
+    document.getElementById("message").innerText=
+      "恭喜完成所有任務！準備迎接最後的驚喜！";
+    setTimeout(()=>{
+      document.getElementById("game").style.display="none";
+      document.getElementById("final").style.display="block";
+    },1500);
+  }
 }
 
-function submitData() {
-const chosenDate = document.getElementById('dateInput').value;
-const chosenTime = document.getElementById('timeInput').value;
-const chosenFood = document.getElementById('foodInput').value;
-
-if(!chosenDate || !chosenTime || !chosenFood) return;
-
-// 將畫面的值同步到隱藏的 Google 表單欄位中
-document.getElementById('entryDate').value = chosenDate;
-document.getElementById('entryTime').value = chosenTime;
-document.getElementById('entryFood').value = chosenFood;
-
-alert('牛來！不准反悔！');
+function wish() {
+  document.getElementById("cake").innerHTML="🎂";
+  document.getElementById("ending").style.display="block";
+  document.getElementById("confetti").innerHTML=
+    "🎉✨🎊💗🌸🎉✨🎊💗🌸";
 }
 </script>
-
 </body>
-</html>\
+</html>
